@@ -256,10 +256,12 @@ namespace TicTacToe
 
             if (result == MessageBoxResult.Yes)
             {
-                // Повертаємося до меню
+
+                RestartGame();
+
                 MenuGrid.Visibility = Visibility.Visible;
                 GameGrid.Visibility = Visibility.Collapsed;
-                // Скидаємо налаштування
+
                 rbComputer.IsChecked = true;
                 cbDifficulty.SelectedIndex = 0;
                 cbFirstMove.SelectedIndex = 0;
@@ -328,7 +330,5 @@ namespace TicTacToe
             }
             return false;
         }
-
-      
     }
 }
