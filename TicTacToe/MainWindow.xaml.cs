@@ -49,11 +49,8 @@ namespace TicTacToe
                 ComboBoxItem item when item.Content.ToString() == "Computer/Player 2 (O)" => true,
                 _ => false
             };
-
-            // Ініціалізуємо гру
             InitializeGame();
 
-            // Перемикаємося на ігрове поле
             MenuGrid.Visibility = Visibility.Collapsed;
             GameGrid.Visibility = Visibility.Visible;
         }
@@ -307,8 +304,7 @@ namespace TicTacToe
                             }
                             else
                             {
-                                MenuGrid.Visibility = Visibility.Visible;
-                                GameGrid.Visibility = Visibility.Collapsed;
+                                Application.Current.Shutdown();
                             }
                         });
                     });
@@ -325,8 +321,7 @@ namespace TicTacToe
                     }
                     else
                     {
-                        MenuGrid.Visibility = Visibility.Visible;
-                        GameGrid.Visibility = Visibility.Collapsed;
+                        Application.Current.Shutdown();
                     }
                 }
                 return true;
