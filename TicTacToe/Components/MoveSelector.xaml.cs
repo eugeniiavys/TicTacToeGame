@@ -38,7 +38,7 @@ namespace TicTacToe.Components
             remove { RemoveHandler(MoveClickEvent, value); }
         }
 
-        public Button ClickedButton { get; private set; }
+        public Button ClickedButton { get; set; }
 
         public MoveSelector()
         {
@@ -54,5 +54,25 @@ namespace TicTacToe.Components
 
             RaiseEvent(new RoutedEventArgs(MoveClickEvent));
         }
+
+        public void ResetButtons()
+        {
+            var mainGrid = (Grid)Content;
+            var buttonGrid = (Grid)mainGrid.Children[0];
+
+            foreach (UIElement child in buttonGrid.Children)
+            {
+                if (child is Button button)
+                {
+                    button.Content = "";
+                    button.ClearValue(Button.BackgroundProperty);
+                    button.IsEnabled = true;
+                    button.Visibility = Visibility.Visible;
+                }
+            }
+
+            ClickedButton = null;
+        }
+
     }
 }

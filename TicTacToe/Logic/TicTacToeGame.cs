@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows;
 
 namespace TicTacToe.Logic
 {
@@ -47,7 +48,14 @@ namespace TicTacToe.Logic
             _players = players;
             _currentPlayerIndex = 0;
         }
-
+        public char[,,] GetBoard()
+        {
+            return _gameBoard;
+        }
+        public Player[] Players
+        {
+            get { return _players; }
+        }
         public void MakeMove(PositionPoint point)
         {
             if (IsGameOver)

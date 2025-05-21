@@ -9,7 +9,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\bc.jpeg" />
+    <None Remove="Assets\bc.jpg" />
     <None Remove="Assets\cube_Y.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\bc.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
   <ItemGroup>

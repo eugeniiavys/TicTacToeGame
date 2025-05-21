@@ -3,139 +3,277 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:TicTacToe" 
+        xmlns:local="clr-namespace:TicTacToe"
         xmlns:components="clr-namespace:TicTacToe.Components"
         mc:Ignorable="d"
-        Title="TicTacToe" Height="450" Width="800">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="3*"/>
-        </Grid.ColumnDefinitions>
-        <Grid Grid.Column="0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="1*"/>
-                <RowDefinition Height="1*"/>
-                <RowDefinition Height="1*"/>
-            </Grid.RowDefinitions>
+        Title="3D Tic Tac Toe" Height="450" Width="800"
+        MinWidth="400" MinHeight="300"
+        WindowStartupLocation="CenterScreen">
 
-            
-            <components:MoveSelector Grid.Row="0" RowPosition="2" MoveClick="OnMoveClicked"/>
-            <components:MoveSelector Grid.Row="1" RowPosition="1" MoveClick="OnMoveClicked"/>
-            <components:MoveSelector Grid.Row="2" RowPosition="0" MoveClick="OnMoveClicked"/>
-            
+    <Window.Background>
+        <ImageBrush ImageSource="/Assets/bc.jpg" Stretch="UniformToFill" Opacity="0.8"/>
+    </Window.Background>
+
+    <Window.Resources>
+        <Style x:Key="AdaptiveText" TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="Cascadia Mono SemiBold"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+        </Style>
+
+        <Style x:Key="AdaptiveButton" TargetType="Button">
+            <Setter Property="FontFamily" Value="Cascadia Mono SemiLight"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <!-- Меню налаштувань -->
+        <Grid x:Name="MenuGrid" Visibility="Visible">
+            <Grid.Resources>
+                <Style TargetType="TextBlock" BasedOn="{StaticResource AdaptiveText}">
+                    <Setter Property="TextAlignment" Value="Center"/>
+                </Style>
+            </Grid.Resources>
+
+            <Viewbox Stretch="Uniform" Margin="20">
+                <Grid Width="760" Height="410">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Text="3D Tic Tac Toe"
+                               Style="{StaticResource AdaptiveText}"
+                               FontSize="32" FontWeight="Bold" Margin="0,23,0,20"
+                               HorizontalAlignment="Center" Foreground="Red"
+                               x:Name="titleText"/>
+
+                    <Grid Grid.Row="1" VerticalAlignment="Center">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0" Text="Select Game Mode:"
+                                   Style="{StaticResource AdaptiveText}"
+                                   FontSize="22" Margin="0,0,0,15"
+                                   Foreground="#FFAE008D" FontWeight="Bold"
+                                   x:Name="gameModeText"/>
+
+                        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,20" 
+                                    HorizontalAlignment="Center">
+                            <RadioButton x:Name="rbComputer" Content="Play Against Computer"
+                                         Foreground="Black" FontFamily="Cascadia Mono"
+                                         FontSize="18" Margin="0,0,30,0" IsChecked="True"/>
+                            <RadioButton x:Name="rbHuman" Content="Play Against Friend"
+                                         Foreground="Black" FontFamily="Cascadia Mono"
+                                         FontSize="18"/>
+                        </StackPanel>
+
+                        <Grid Grid.Row="2" MaxWidth="600" HorizontalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0" Margin="0,0,15,0" HorizontalAlignment="Center">
+                                <TextBlock Text="AI Difficulty:"
+                                           Style="{StaticResource AdaptiveText}"
+                                           FontSize="18" Margin="0,0,0,8"
+                                           Foreground="#FF84370C"
+                                           x:Name="difficultyText"/>
+                                <ComboBox x:Name="cbDifficulty" Height="30" Width="150"
+                                          FontFamily="Cascadia Code SemiBold">
+                                    <ComboBoxItem Content="Easy" IsSelected="True"/>
+                                    <ComboBoxItem Content="Medium"/>
+                                    <ComboBoxItem Content="Hard"/>
+                                </ComboBox>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="1" Margin="15,0,0,0" HorizontalAlignment="Center">
+                                <TextBlock Text="First Move:"
+                                           Style="{StaticResource AdaptiveText}"
+                                           FontSize="18" Margin="0,0,0,8"
+                                           Foreground="#FF2D4031"
+                                           x:Name="firstMoveText"/>
+                                <ComboBox x:Name="cbFirstMove" Height="30" Width="150"
+                                          FontFamily="Cascadia Mono SemiBold">
+                                    <ComboBoxItem Content="Player (X)" IsSelected="True"/>
+                                    <ComboBoxItem Content="Computer/Player 2 (O)"/>
+                                </ComboBox>
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
+
+                    <StackPanel Grid.Row="2" Orientation="Horizontal"
+                                HorizontalAlignment="Center" Margin="0,20,0,0">
+                        <Button x:Name="btnStart" Content="Start Game"
+                                Style="{StaticResource AdaptiveButton}"
+                                Width="150" Height="45"
+                                Margin="10,0" Click="btnStart_Click" FontSize="16"
+                                Background="#FFA8FECB"/>
+                        <Button x:Name="btnExit" Content="Exit"
+                                Style="{StaticResource AdaptiveButton}"
+                                Width="150" Height="45"
+                                Margin="10,0" Click="btnExit_Click" FontSize="16"
+                                Background="#FFFFBEFC"/>
+                    </StackPanel>
+                </Grid>
+            </Viewbox>
         </Grid>
 
-        <Grid Grid.Column="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="0.8*"/>
-                <RowDefinition Height="0.2*"/>
-            </Grid.RowDefinitions>
-            
-            <Grid x:Name="grid3" Grid.Row="0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="0.4*"/>
-                    <ColumnDefinition Width="0.8*"/>
-                    <ColumnDefinition Width="0.1*"/>
-                </Grid.ColumnDefinitions>
+        <!-- Ігрове поле -->
+        <Grid x:Name="GameGrid" Visibility="Collapsed">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="3*"/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="0.1*"/>
-                    <RowDefinition Height="0.8*"/>
-                    <RowDefinition Height="0.4*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
                 </Grid.RowDefinitions>
 
-                <Grid Grid.Row="1" Grid.Column="1">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="1*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="1*"/>
-                        <RowDefinition Height="1*"/>
-                        <RowDefinition Height="1*"/>
-                    </Grid.RowDefinitions>
-
-                    <Image Grid.Row="0" Grid.Column="0" Visibility="Hidden" x:Name="cube_2_0_2"/>
-                    <Image Grid.Row="0" Grid.Column="1" Visibility="Hidden" x:Name="cube_2_1_2"/>
-                    <Image Grid.Row="0" Grid.Column="2" Visibility="Hidden" x:Name="cube_2_2_2"/>
-                    <Image Grid.Row="1" Grid.Column="0" Visibility="Hidden" x:Name="cube_1_0_2"/>
-                    <Image Grid.Row="1" Grid.Column="1" Visibility="Hidden" x:Name="cube_1_1_2"/>
-                    <Image Grid.Row="1" Grid.Column="2" Visibility="Hidden" x:Name="cube_1_2_2"/>
-                    <Image Grid.Row="2" Grid.Column="0" Visibility="Hidden" x:Name="cube_0_0_2"/>
-                    <Image Grid.Row="2" Grid.Column="1" Visibility="Hidden" x:Name="cube_0_1_2"/>
-                    <Image Grid.Row="2" Grid.Column="2" Visibility="Hidden" x:Name="cube_0_2_2"/>
-                </Grid>
+                <components:MoveSelector Grid.Row="0" RowPosition="2" MoveClick="OnMoveClicked"/>
+                <components:MoveSelector Grid.Row="1" RowPosition="1" MoveClick="OnMoveClicked"/>
+                <components:MoveSelector Grid.Row="2" RowPosition="0" MoveClick="OnMoveClicked"/>
             </Grid>
-            <Grid x:Name="grid2" Grid.Row="0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="0.3*"/>
-                    <ColumnDefinition Width="0.8*"/>
-                    <ColumnDefinition Width="0.2*"/>
-                </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="1">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="0.2*"/>
                     <RowDefinition Height="0.8*"/>
                     <RowDefinition Height="0.2*"/>
                 </Grid.RowDefinitions>
 
-                <Grid Grid.Row="1" Grid.Column="1">
+                <Grid x:Name="grid3" Grid.Row="0">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="0.4*"/>
+                        <ColumnDefinition Width="0.8*"/>
+                        <ColumnDefinition Width="0.1*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="1*"/>
-                        <RowDefinition Height="1*"/>
-                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="0.1*"/>
+                        <RowDefinition Height="0.8*"/>
+                        <RowDefinition Height="0.4*"/>
                     </Grid.RowDefinitions>
 
-                    <Image Grid.Row="0" Grid.Column="0" Visibility="Hidden" x:Name="cube_2_0_1"/>
-                    <Image Grid.Row="0" Grid.Column="1" Visibility="Hidden" x:Name="cube_2_1_1"/>
-                    <Image Grid.Row="0" Grid.Column="2" Visibility="Hidden" x:Name="cube_2_2_1"/>
-                    <Image Grid.Row="1" Grid.Column="0" Visibility="Hidden" x:Name="cube_1_0_1"/>
-                    <Image Grid.Row="1" Grid.Column="1" Visibility="Hidden" x:Name="cube_1_1_1"/>
-                    <Image Grid.Row="1" Grid.Column="2" Visibility="Hidden" x:Name="cube_1_2_1"/>
-                    <Image Grid.Row="2" Grid.Column="0" Visibility="Hidden" x:Name="cube_0_0_1"/>
-                    <Image Grid.Row="2" Grid.Column="1" Visibility="Hidden" x:Name="cube_0_1_1"/>
-                    <Image Grid.Row="2" Grid.Column="2" Visibility="Hidden" x:Name="cube_0_2_1"/>
-                </Grid>
-            </Grid>
-            <Grid x:Name="grid1" Grid.Row="0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="0.2*"/>
-                    <ColumnDefinition Width="0.8*"/>
-                    <ColumnDefinition Width="0.3*"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="0.3*"/>
-                    <RowDefinition Height="0.8*"/>
-                    <RowDefinition Height="0.0*"/>
-                </Grid.RowDefinitions>
+                    <Grid Grid.Row="1" Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="1*"/>
+                        </Grid.RowDefinitions>
 
-                <Grid Grid.Row="1" Grid.Column="1">
+                        <Image Grid.Row="0" Grid.Column="0" Visibility="Hidden" x:Name="cube_2_0_2"/>
+                        <Image Grid.Row="0" Grid.Column="1" Visibility="Hidden" x:Name="cube_2_1_2"/>
+                        <Image Grid.Row="0" Grid.Column="2" Visibility="Hidden" x:Name="cube_2_2_2"/>
+                        <Image Grid.Row="1" Grid.Column="0" Visibility="Hidden" x:Name="cube_1_0_2"/>
+                        <Image Grid.Row="1" Grid.Column="1" Visibility="Hidden" x:Name="cube_1_1_2"/>
+                        <Image Grid.Row="1" Grid.Column="2" Visibility="Hidden" x:Name="cube_1_2_2"/>
+                        <Image Grid.Row="2" Grid.Column="0" Visibility="Hidden" x:Name="cube_0_0_2"/>
+                        <Image Grid.Row="2" Grid.Column="1" Visibility="Hidden" x:Name="cube_0_1_2"/>
+                        <Image Grid.Row="2" Grid.Column="2" Visibility="Hidden" x:Name="cube_0_2_2"/>
+                    </Grid>
+                </Grid>
+                <Grid x:Name="grid2" Grid.Row="0">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="1*"/>
-                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="0.3*"/>
+                        <ColumnDefinition Width="0.8*"/>
+                        <ColumnDefinition Width="0.2*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="1*"/>
-                        <RowDefinition Height="1*"/>
-                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="0.2*"/>
+                        <RowDefinition Height="0.8*"/>
+                        <RowDefinition Height="0.2*"/>
                     </Grid.RowDefinitions>
 
-                    <Image Grid.Row="0" Grid.Column="0" Visibility="Hidden" x:Name="cube_2_0_0"/>
-                    <Image Grid.Row="0" Grid.Column="1" Visibility="Hidden" x:Name="cube_2_1_0"/>
-                    <Image Grid.Row="0" Grid.Column="2" Visibility="Hidden" x:Name="cube_2_2_0"/>
-                    <Image Grid.Row="1" Grid.Column="0" Visibility="Hidden" x:Name="cube_1_0_0"/>
-                    <Image Grid.Row="1" Grid.Column="1" Visibility="Hidden" x:Name="cube_1_1_0"/>
-                    <Image Grid.Row="1" Grid.Column="2" Visibility="Hidden" x:Name="cube_1_2_0"/>
-                    <Image Grid.Row="2" Grid.Column="0" Visibility="Hidden" x:Name="cube_0_0_0"/>
-                    <Image Grid.Row="2" Grid.Column="1" Visibility="Hidden" x:Name="cube_0_1_0"/>
-                    <Image Grid.Row="2" Grid.Column="2" Visibility="Hidden" x:Name="cube_0_2_0"/>
+                    <Grid Grid.Row="1" Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="1*"/>
+                        </Grid.RowDefinitions>
+
+                        <Image Grid.Row="0" Grid.Column="0" Visibility="Hidden" x:Name="cube_2_0_1"/>
+                        <Image Grid.Row="0" Grid.Column="1" Visibility="Hidden" x:Name="cube_2_1_1"/>
+                        <Image Grid.Row="0" Grid.Column="2" Visibility="Hidden" x:Name="cube_2_2_1"/>
+                        <Image Grid.Row="1" Grid.Column="0" Visibility="Hidden" x:Name="cube_1_0_1"/>
+                        <Image Grid.Row="1" Grid.Column="1" Visibility="Hidden" x:Name="cube_1_1_1"/>
+                        <Image Grid.Row="1" Grid.Column="2" Visibility="Hidden" x:Name="cube_1_2_1"/>
+                        <Image Grid.Row="2" Grid.Column="0" Visibility="Hidden" x:Name="cube_0_0_1"/>
+                        <Image Grid.Row="2" Grid.Column="1" Visibility="Hidden" x:Name="cube_0_1_1"/>
+                        <Image Grid.Row="2" Grid.Column="2" Visibility="Hidden" x:Name="cube_0_2_1"/>
+                    </Grid>
                 </Grid>
+                <Grid x:Name="grid1" Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.2*"/>
+                        <ColumnDefinition Width="0.8*"/>
+                        <ColumnDefinition Width="0.3*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0.3*"/>
+                        <RowDefinition Height="0.8*"/>
+                        <RowDefinition Height="0.0*"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="1" Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="1*"/>
+                        </Grid.RowDefinitions>
+
+                        <Image Grid.Row="0" Grid.Column="0" Visibility="Hidden" x:Name="cube_2_0_0"/>
+                        <Image Grid.Row="0" Grid.Column="1" Visibility="Hidden" x:Name="cube_2_1_0"/>
+                        <Image Grid.Row="0" Grid.Column="2" Visibility="Hidden" x:Name="cube_2_2_0"/>
+                        <Image Grid.Row="1" Grid.Column="0" Visibility="Hidden" x:Name="cube_1_0_0"/>
+                        <Image Grid.Row="1" Grid.Column="1" Visibility="Hidden" x:Name="cube_1_1_0"/>
+                        <Image Grid.Row="1" Grid.Column="2" Visibility="Hidden" x:Name="cube_1_2_0"/>
+                        <Image Grid.Row="2" Grid.Column="0" Visibility="Hidden" x:Name="cube_0_0_0"/>
+                        <Image Grid.Row="2" Grid.Column="1" Visibility="Hidden" x:Name="cube_0_1_0"/>
+                        <Image Grid.Row="2" Grid.Column="2" Visibility="Hidden" x:Name="cube_0_2_0"/>
+                    </Grid>
+                </Grid>
+                <StackPanel Grid.Row="1" 
+                            Orientation="Horizontal" 
+                            HorizontalAlignment="Center" 
+                            VerticalAlignment="Center">
+                    <Button Content="Restart Game" 
+                            Padding="10,5" 
+                            Margin="0,0,20,0"
+                            Width="120"
+                            Height="40"
+                            FontSize="16"
+                            Click="RestartGame_Click"/>
+                    <Button Content="Back to Menu" 
+                            Padding="10,5" 
+                            Width="120"
+                            Height="40"
+                            FontSize="16"
+                            Click="BackToMenu_Click"/>
+                </StackPanel>
             </Grid>
         </Grid>
     </Grid>
