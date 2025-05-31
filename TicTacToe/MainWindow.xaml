@@ -30,7 +30,6 @@
     </Window.Resources>
 
     <Grid>
-        <!-- Меню налаштувань -->
         <Grid x:Name="MenuGrid" Visibility="Visible">
             <Grid.Resources>
                 <Style TargetType="TextBlock" BasedOn="{StaticResource AdaptiveText}">
@@ -127,7 +126,7 @@
             </Viewbox>
         </Grid>
 
-        <!-- Ігрове поле -->
+
         <Grid x:Name="GameGrid" Visibility="Collapsed">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>

@@ -41,12 +41,10 @@ namespace TicTacToe.Logic
             InitializeWinningLines();
         }
 
-        // Ініціалізуємо всі 49 можливих виграшних комбінацій
         private void InitializeWinningLines()
         {
             _winningLines = new List<List<(int, int, int)>>();
 
-            // 1. Рядки - 9 комбінацій
             for (int x = 0; x < 3; x++)
             {
                 for (int z = 0; z < 3; z++)
@@ -60,7 +58,6 @@ namespace TicTacToe.Logic
                 }
             }
 
-            // 2. Стовпці - 9 комбінацій
             for (int y = 0; y < 3; y++)
             {
                 for (int z = 0; z < 3; z++)
@@ -74,7 +71,6 @@ namespace TicTacToe.Logic
                 }
             }
 
-            // 3. Вертикальні лінії - 9 комбінацій
             for (int x = 0; x < 3; x++)
             {
                 for (int y = 0; y < 3; y++)
@@ -88,10 +84,8 @@ namespace TicTacToe.Logic
                 }
             }
 
-            // 4. Діагоналі в площині XY - 6 комбінацій
             for (int z = 0; z < 3; z++)
             {
-                // Діагональ \
                 var line1 = new List<(int, int, int)>
                 {
                     (0, 0, z),
@@ -100,7 +94,6 @@ namespace TicTacToe.Logic
                 };
                 _winningLines.Add(line1);
 
-                // Діагональ /
                 var line2 = new List<(int, int, int)>
                 {
                     (2, 0, z),
@@ -110,10 +103,8 @@ namespace TicTacToe.Logic
                 _winningLines.Add(line2);
             }
 
-            // 5. Діагоналі в площині XZ - 6 комбінацій
             for (int y = 0; y < 3; y++)
             {
-                // Діагональ \
                 var line1 = new List<(int, int, int)>
                 {
                     (0, y, 0),
@@ -122,7 +113,6 @@ namespace TicTacToe.Logic
                 };
                 _winningLines.Add(line1);
 
-                // Діагональ /
                 var line2 = new List<(int, int, int)>
                 {
                     (0, y, 2),
@@ -132,10 +122,8 @@ namespace TicTacToe.Logic
                 _winningLines.Add(line2);
             }
 
-            // 6. Діагоналі в площині YZ - 6 комбінацій
             for (int x = 0; x < 3; x++)
             {
-                // Діагональ \
                 var line1 = new List<(int, int, int)>
                 {
                     (x, 0, 0),
@@ -144,7 +132,6 @@ namespace TicTacToe.Logic
                 };
                 _winningLines.Add(line1);
 
-                // Діагональ /
                 var line2 = new List<(int, int, int)>
                 {
                     (x, 0, 2),
@@ -154,7 +141,6 @@ namespace TicTacToe.Logic
                 _winningLines.Add(line2);
             }
 
-            // 7. Чотири діагоналі через весь куб
             var cube1 = new List<(int, int, int)>
             {
                 (0, 0, 0),
@@ -188,16 +174,13 @@ namespace TicTacToe.Logic
             _winningLines.Add(cube4);
         }
 
-        // Основний метод для знаходження ходу
         public PositionPoint MakeMove()
         {
-            // Створюємо копію ігрової дошки
+
             char[,,] boardCopy = new char[3, 3, 3];
 
-            // Отримуємо поточний стан дошки
             char[,,] gameBoard = _game.GetBoard();
 
-            // Копіюємо дошку
             for (int x = 0; x < 3; x++)
             {
                 for (int y = 0; y < 3; y++)
@@ -209,40 +192,33 @@ namespace TicTacToe.Logic
                 }
             }
 
-            // Підрахунок зайнятих клітинок для визначення стадії гри
             int filledCells = CountFilledCells(boardCopy);
 
-            // Для початкової стадії гри використовуємо швидку стратегію
             if (filledCells <= 2)
             {
                 return MakeEarlyGameMove(boardCopy);
             }
 
-            // Для решти ходів використовуємо повний мінімакс
             return FindBestMove(boardCopy, filledCells);
         }
 
-        // Оптимізований хід для початку гри
+
         private PositionPoint MakeEarlyGameMove(char[,,] board)
         {
-            // Спочатку перевіряємо, чи центр вільний - найкраща стратегічна позиція
             if (board[1, 1, 1] == '\0')
             {
-                // 80% ймовірність вибрати центр, 20% - інші клітинки
                 if (_random.Next(100) < 80)
                 {
                     return new PositionPoint(1, 1, 1);
                 }
             }
 
-            // Визначаємо доступні кути
             var corners = new List<(int, int, int)>
             {
                 (0, 0, 0), (0, 0, 2), (0, 2, 0), (0, 2, 2),
                 (2, 0, 0), (2, 0, 2), (2, 2, 0), (2, 2, 2)
             };
 
-            // Збираємо вільні кути
             var availableCorners = new List<(int, int, int)>();
             foreach (var corner in corners)
             {
@@ -252,7 +228,6 @@ namespace TicTacToe.Logic
                 }
             }
 
-            // Якщо є вільні кути, вибираємо випадковий
             if (availableCorners.Count > 0)
             {
                 int index = _random.Next(availableCorners.Count);
@@ -260,7 +235,6 @@ namespace TicTacToe.Logic
                 return new PositionPoint(corner.Item1, corner.Item2, corner.Item3);
             }
 
-            // Якщо кути зайняті, вибираємо випадковий доступний хід
             var availableMoves = new List<(int, int, int)>();
             for (int x = 0; x < 3; x++)
             {
@@ -283,11 +257,9 @@ namespace TicTacToe.Logic
                 return new PositionPoint(move.Item1, move.Item2, move.Item3);
             }
 
-            // На випадок, якщо дошка повна (не повинно статися)
             return new PositionPoint(0, 0, 0);
         }
 
-        // Метод для підрахунку заповнених клітинок
         private int CountFilledCells(char[,,] board)
         {
             int count = 0;
@@ -305,55 +277,42 @@ namespace TicTacToe.Logic
             return count;
         }
 
-        // Метод для знаходження найкращого ходу
         private PositionPoint FindBestMove(char[,,] board, int filledCells)
         {
-            // Очищаємо кеш транспозицій перед новим пошуком
             _transpositionTable.Clear();
 
-            // Визначаємо глибину пошуку залежно від стадії гри
             int searchDepth = DetermineSearchDepth(filledCells);
 
             int bestScore = int.MinValue;
             List<PositionPoint> bestMoves = new List<PositionPoint>();
 
-            // Перебираємо всі можливі ходи у оптимізованому порядку
             foreach (var (x, y, z) in GetOrderedEmptyCells(board))
             {
-                // Робимо хід
                 board[x, y, z] = _playerSymbol;
-
-                // Оцінюємо хід через мінімакс із альфа-бета відсіканням
                 int score = Minimax(board, 0, false, int.MinValue, int.MaxValue, searchDepth);
-
-                // Відміняємо хід
                 board[x, y, z] = '\0';
 
-                // Якщо знайдено кращий хід, оновлюємо список найкращих ходів
                 if (score > bestScore)
                 {
                     bestScore = score;
                     bestMoves.Clear();
                     bestMoves.Add(new PositionPoint(x, y, z));
                 }
-                // Якщо хід має таку ж оцінку, додаємо його до списку найкращих ходів
                 else if (score == bestScore)
                 {
                     bestMoves.Add(new PositionPoint(x, y, z));
                 }
 
-                // Якщо знайдено виграшний хід, можемо одразу його обрати
+  
                 if (score >= WIN_SCORE)
                 {
                     return new PositionPoint(x, y, z);
                 }
             }
 
-            // Випадково обираємо один з найкращих ходів для різноманітності
             return bestMoves[_random.Next(bestMoves.Count)];
         }
 
-        // Визначає глибину пошуку залежно від стадії гри
         private int DetermineSearchDepth(int filledCells)
         {
             int baseDepth;
@@ -368,10 +327,8 @@ namespace TicTacToe.Logic
             return Math.Min(baseDepth, _maxDepth);
         }
 
-        // Повертає впорядковані порожні клітинки для оптимізації перебору
         private List<(int, int, int)> GetOrderedEmptyCells(char[,,] board)
         {
-            // Отримуємо стратегічно важливі позиції
             var center = (1, 1, 1);
 
             var corners = new List<(int, int, int)>
@@ -387,13 +344,11 @@ namespace TicTacToe.Logic
 
             var orderedCells = new List<(int, int, int)>();
 
-            // Перевіряємо центр куба
             if (board[center.Item1, center.Item2, center.Item3] == '\0')
             {
                 orderedCells.Add(center);
             }
 
-            // Додаємо вільні кути
             foreach (var corner in corners)
             {
                 if (board[corner.Item1, corner.Item2, corner.Item3] == '\0')
@@ -402,7 +357,6 @@ namespace TicTacToe.Logic
                 }
             }
 
-            // Додаємо вільні центри граней
             foreach (var faceCenter in faceCenters)
             {
                 if (board[faceCenter.Item1, faceCenter.Item2, faceCenter.Item3] == '\0')
@@ -411,7 +365,6 @@ namespace TicTacToe.Logic
                 }
             }
 
-            // Додаємо решту вільних клітинок
             for (int x = 0; x < 3; x++)
             {
                 for (int y = 0; y < 3; y++)
@@ -433,7 +386,6 @@ namespace TicTacToe.Logic
             return orderedCells;
         }
 
-        // Метод для перетворення дошки в хеш-ключ для таблиці транспозицій
         private string GetBoardKey(char[,,] board)
         {
             var key = new char[27];
@@ -453,28 +405,23 @@ namespace TicTacToe.Logic
             return new string(key);
         }
 
-        // Покращений алгоритм мінімакс з альфа-бета відсіканням
         private int Minimax(char[,,] board, int depth, bool isMaximizing, int alpha, int beta, int maxDepth)
         {
-            // Перевіряємо, чи позиція вже є в кеші транспозицій
             string boardKey = GetBoardKey(board);
             if (_transpositionTable.TryGetValue(boardKey, out int cachedScore))
             {
                 return cachedScore;
             }
 
-            // Перевіряємо, чи є виграшна комбінація
             int winnerScore = CheckWinner(board);
             if (winnerScore != 0)
             {
-                // Регулюємо оцінку залежно від глибини
                 if (winnerScore > 0)
-                    return WIN_SCORE - depth;  // Виграш комп'ютера, швидкий виграш кращий
+                    return WIN_SCORE - depth;  
                 else
-                    return -WIN_SCORE + depth; // Виграш опонента, повільніший програш кращий
+                    return -WIN_SCORE + depth; 
             }
 
-            // Досягнуто максимальну глибину або дошка повна
             if (depth == maxDepth || IsBoardFull(board))
             {
                 int positionScore = EvaluatePosition(board);
@@ -486,7 +433,6 @@ namespace TicTacToe.Logic
             {
                 int bestScore = int.MinValue;
 
-                // Перебір ходів у оптимізованому порядку
                 foreach (var move in GetOrderedMoves(board, true))
                 {
                     int x = move.Item1, y = move.Item2, z = move.Item3;
@@ -500,13 +446,11 @@ namespace TicTacToe.Logic
                         bestScore = Math.Max(bestScore, score);
                         alpha = Math.Max(alpha, bestScore);
 
-                        // Альфа-бета відсікання
                         if (beta <= alpha)
                             break;
                     }
                 }
 
-                // Зберігаємо результат у кеші транспозицій
                 _transpositionTable[boardKey] = bestScore;
                 return bestScore;
             }
@@ -514,7 +458,6 @@ namespace TicTacToe.Logic
             {
                 int bestScore = int.MaxValue;
 
-                // Перебір ходів у оптимізованому порядку
                 foreach (var move in GetOrderedMoves(board, false))
                 {
                     int x = move.Item1, y = move.Item2, z = move.Item3;
@@ -527,23 +470,19 @@ namespace TicTacToe.Logic
 
                         bestScore = Math.Min(bestScore, score);
                         beta = Math.Min(beta, bestScore);
-
-                        // Альфа-бета відсікання
                         if (beta <= alpha)
                             break;
                     }
                 }
 
-                // Зберігаємо результат у кеші транспозицій
                 _transpositionTable[boardKey] = bestScore;
                 return bestScore;
             }
         }
 
-        // Метод для оптимізації порядку перебору ходів (для покращення альфа-бета відсікання)
         private List<(int, int, int)> GetOrderedMoves(char[,,] board, bool isMaximizing)
         {
-            var potentialMoves = new List<(int, int, int, int)>(); // x, y, z, потенціал
+            var potentialMoves = new List<(int, int, int, int)>(); 
 
             for (int x = 0; x < 3; x++)
             {
@@ -555,17 +494,15 @@ namespace TicTacToe.Logic
                         {
                             int potential = 0;
 
-                            // Додаємо потенціал за стратегічно важливі клітинки
                             if (x == 1 && y == 1 && z == 1)
-                                potential += CENTER_SCORE * 2; // Центр куба
+                                potential += CENTER_SCORE * 2;
                             else if ((x == 0 || x == 2) && (y == 0 || y == 2) && (z == 0 || z == 2))
-                                potential += CORNER_SCORE; // Кути
+                                potential += CORNER_SCORE; 
                             else if ((x == 1 && (y == 0 || y == 2) && (z == 0 || z == 2)) ||
                                     ((x == 0 || x == 2) && y == 1 && (z == 0 || z == 2)) ||
                                     ((x == 0 || x == 2) && (y == 0 || y == 2) && z == 1))
-                                potential += 2; // Центри граней
+                                potential += 2; 
 
-                            // Перевіряємо потенціал виграшу для кожної лінії
                             foreach (var line in _winningLines)
                             {
                                 if (line.Contains((x, y, z)))
@@ -584,24 +521,23 @@ namespace TicTacToe.Logic
                                             emptyCount++;
                                     }
 
-                                    // Додаємо потенціал за майже виграшні лінії
                                     if (isMaximizing)
                                     {
                                         if (computerCount == 2 && emptyCount == 1)
-                                            potential += 30; // Майже виграш комп'ютера
+                                            potential += 30; 
                                         else if (opponentCount == 2 && emptyCount == 1)
-                                            potential += 25; // Блокування виграшу опонента
+                                            potential += 25; 
                                         else if (computerCount == 1 && emptyCount == 2)
-                                            potential += 5;  // Розвиток лінії
+                                            potential += 5;  
                                     }
                                     else
                                     {
                                         if (opponentCount == 2 && emptyCount == 1)
-                                            potential += 30; // Майже виграш опонента
+                                            potential += 30; 
                                         else if (computerCount == 2 && emptyCount == 1)
-                                            potential += 25; // Блокування виграшу комп'ютера
+                                            potential += 25; 
                                         else if (opponentCount == 1 && emptyCount == 2)
-                                            potential += 5;  // Розвиток лінії
+                                            potential += 5;  
                                     }
                                 }
                             }
@@ -612,22 +548,18 @@ namespace TicTacToe.Logic
                 }
             }
 
-            // Сортуємо ходи за потенціалом (спадно для максимізуючого гравця, зростаюче для мінімізуючого)
             if (isMaximizing)
                 potentialMoves.Sort((a, b) => b.Item4.CompareTo(a.Item4));
             else
                 potentialMoves.Sort((a, b) => a.Item4.CompareTo(b.Item4));
 
-            // Повертаємо відсортований список без оцінок
             return potentialMoves.Select(m => (m.Item1, m.Item2, m.Item3)).ToList();
         }
 
-        // Розширений метод для оцінки поточної позиції (евристична функція)
         private int EvaluatePosition(char[,,] board)
         {
             int score = 0;
 
-            // Оцінка по всіх можливих лініях
             foreach (var line in _winningLines)
             {
                 int computerCount = 0;
@@ -644,29 +576,25 @@ namespace TicTacToe.Logic
                         emptyCount++;
                 }
 
-                // Оцінка за потенціал виграшу
                 if (computerCount == 3)
-                    return WIN_SCORE;   // Комп'ютер виграв
+                    return WIN_SCORE;  
                 else if (opponentCount == 3)
-                    return -WIN_SCORE;  // Опонент виграв
+                    return -WIN_SCORE;  
                 else if (computerCount == 2 && emptyCount == 1)
-                    score += POTENTIAL_LINE_SCORE;  // Потенційний виграш комп'ютера
+                    score += POTENTIAL_LINE_SCORE;  
                 else if (opponentCount == 2 && emptyCount == 1)
-                    score -= POTENTIAL_LINE_SCORE;  // Потенційний виграш опонента
+                    score -= POTENTIAL_LINE_SCORE;  
                 else if (computerCount == 1 && emptyCount == 2)
-                    score += 1;         // Потенціал розвитку лінії комп'ютера
+                    score += 1;      
                 else if (opponentCount == 1 && emptyCount == 2)
-                    score -= 1;         // Потенціал розвитку лінії опонента
+                    score -= 1;      
             }
 
-            // Додаткова оцінка за контроль стратегічних клітинок
-            // Центр куба
             if (board[1, 1, 1] == _playerSymbol)
                 score += CENTER_SCORE;
             else if (board[1, 1, 1] == _opponentSymbol)
                 score -= CENTER_SCORE;
 
-            // Кути куба
             int computerCorners = 0;
             int opponentCorners = 0;
             var corners = new (int, int, int)[]
@@ -686,7 +614,6 @@ namespace TicTacToe.Logic
             score += computerCorners * CORNER_SCORE;
             score -= opponentCorners * CORNER_SCORE;
 
-            // Оцінка за кількість можливих ходів
             int computerMoves = CountPotentialWinningLines(board, _playerSymbol);
             int opponentMoves = CountPotentialWinningLines(board, _opponentSymbol);
 
@@ -695,7 +622,6 @@ namespace TicTacToe.Logic
             return score;
         }
 
-        // Метод для підрахунку потенційних ліній перемоги (мобільність)
         private int CountPotentialWinningLines(char[,,] board, char symbol)
         {
             int count = 0;
@@ -721,7 +647,7 @@ namespace TicTacToe.Logic
             return count;
         }
 
-        // Перевіряє, чи є переможець на дошці
+
         private int CheckWinner(char[,,] board)
         {
             foreach (var line in _winningLines)
@@ -744,7 +670,6 @@ namespace TicTacToe.Logic
             return 0;
         }
 
-        // Перевірка чи дошка заповнена
         private bool IsBoardFull(char[,,] board)
         {
             for (int x = 0; x < 3; x++)

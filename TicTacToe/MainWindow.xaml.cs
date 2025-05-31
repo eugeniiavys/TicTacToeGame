@@ -35,7 +35,6 @@ namespace TicTacToe
 
         private void btnStart_Click(object sender, RoutedEventArgs e)
         {
-            // Зчитуємо налаштування з меню
             _isComputerEnabled = rbComputer.IsChecked == true;
             _difficulty = cbDifficulty.SelectedItem switch
             {
@@ -256,8 +255,7 @@ namespace TicTacToe
 
             if (result == MessageBoxResult.Yes)
             {
-
-                RestartGame();
+                ClearGameBoard();
 
                 MenuGrid.Visibility = Visibility.Visible;
                 GameGrid.Visibility = Visibility.Collapsed;
@@ -265,6 +263,42 @@ namespace TicTacToe
                 rbComputer.IsChecked = true;
                 cbDifficulty.SelectedIndex = 0;
                 cbFirstMove.SelectedIndex = 0;
+            }
+        }
+
+        private void ClearGameBoard()
+        {
+            for (int x = 0; x < 3; x++)
+            {
+                for (int y = 0; y < 3; y++)
+                {
+                    for (int z = 0; z < 3; z++)
+                    {
+                        Image cubeImage = (Image)this.FindName($"cube_{x}_{y}_{z}");
+                        if (cubeImage != null)
+                        {
+                            cubeImage.Source = null;
+                            cubeImage.Visibility = Visibility.Hidden;
+                            cubeImage.Effect = null;
+                        }
+                    }
+                }
+            }
+
+            grid1.Visibility = Visibility.Visible;
+            grid2.Visibility = Visibility.Visible;
+            grid3.Visibility = Visibility.Visible;
+
+            Grid leftPanel = (Grid)GameGrid.Children[0];
+            leftPanel.Visibility = Visibility.Visible;
+
+            foreach (UIElement element in leftPanel.Children)
+            {
+                if (element is MoveSelector selector)
+                {
+                    selector.Visibility = Visibility.Visible;
+                    selector.ResetButtons();
+                }
             }
         }
 

@@ -6,12 +6,18 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>Assets\tic-tac-toe.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="Assets\bc.jpeg" />
     <None Remove="Assets\bc.jpg" />
     <None Remove="Assets\cube_Y.png" />
+    <None Remove="Assets\tic-tac-toe.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Assets\tic-tac-toe.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -27,6 +33,7 @@
     <Resource Include="Assets\cube_X.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Assets\tic-tac-toe.ico" />
   </ItemGroup>
 
 </Project>

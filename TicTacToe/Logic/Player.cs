@@ -3,7 +3,6 @@ using System.Windows.Media.Imaging;
 
 namespace TicTacToe.Logic
 {
-    // This class used to represent a player in the game
     public class Player
     {
         public string Name { get; private set; }

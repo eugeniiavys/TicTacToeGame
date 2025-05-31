@@ -90,8 +90,6 @@ namespace TicTacToe.Logic
             _winningLine = null;
 
 
-
-            // 1. Перевірка рядків (9 комбінацій: 3 рядки * 3 шари)
             for (int x = 0; x < BoardSize; x++)
             {
                 for (int z = 0; z < BoardSize; z++)
@@ -112,7 +110,6 @@ namespace TicTacToe.Logic
                 }
             }
 
-            // 2. Перевірка стовпців (9 комбінацій: 3 стовпці * 3 шари)
             for (int y = 0; y < BoardSize; y++)
             {
                 for (int z = 0; z < BoardSize; z++)
@@ -133,7 +130,6 @@ namespace TicTacToe.Logic
                 }
             }
 
-            // 3. Перевірка вертикальних ліній вздовж осі Z (9 комбінацій: 3*3 позиції на плоскій дошці)
             for (int x = 0; x < BoardSize; x++)
             {
                 for (int y = 0; y < BoardSize; y++)
@@ -154,10 +150,8 @@ namespace TicTacToe.Logic
                 }
             }
 
-            // 4. Діагоналі в площині XY (6 комбінацій: 2 діагоналі * 3 шари)
             for (int z = 0; z < BoardSize; z++)
             {
-                // Діагональ зліва-зверху до права-знизу
                 if (_gameBoard[0, 0, z] != '\0' &&
                     _gameBoard[0, 0, z] == _gameBoard[1, 1, z] &&
                     _gameBoard[1, 1, z] == _gameBoard[2, 2, z])
@@ -172,7 +166,6 @@ namespace TicTacToe.Logic
                     return;
                 }
 
-                // Діагональ зліва-знизу до права-зверху
                 if (_gameBoard[2, 0, z] != '\0' &&
                     _gameBoard[2, 0, z] == _gameBoard[1, 1, z] &&
                     _gameBoard[1, 1, z] == _gameBoard[0, 2, z])
@@ -188,10 +181,8 @@ namespace TicTacToe.Logic
                 }
             }
 
-            // 5. Діагоналі в площині XZ (6 комбінацій: 2 діагоналі * 3 шари)
             for (int y = 0; y < BoardSize; y++)
             {
-                // Діагональ зліва-ззаду до права-спереду
                 if (_gameBoard[0, y, 0] != '\0' &&
                     _gameBoard[0, y, 0] == _gameBoard[1, y, 1] &&
                     _gameBoard[1, y, 1] == _gameBoard[2, y, 2])
@@ -206,7 +197,6 @@ namespace TicTacToe.Logic
                     return;
                 }
 
-                // Діагональ зліва-спереду до права-ззаду
                 if (_gameBoard[0, y, 2] != '\0' &&
                     _gameBoard[0, y, 2] == _gameBoard[1, y, 1] &&
                     _gameBoard[1, y, 1] == _gameBoard[2, y, 0])
@@ -222,10 +212,8 @@ namespace TicTacToe.Logic
                 }
             }
 
-            // 6. Діагоналі в площині YZ (6 комбінацій: 2 діагоналі * 3 шари)
             for (int x = 0; x < BoardSize; x++)
             {
-                // Діагональ зліва-ззаду до права-спереду
                 if (_gameBoard[x, 0, 0] != '\0' &&
                     _gameBoard[x, 0, 0] == _gameBoard[x, 1, 1] &&
                     _gameBoard[x, 1, 1] == _gameBoard[x, 2, 2])
@@ -240,7 +228,6 @@ namespace TicTacToe.Logic
                     return;
                 }
 
-                // Діагональ зліва-спереду до права-ззаду
                 if (_gameBoard[x, 0, 2] != '\0' &&
                     _gameBoard[x, 0, 2] == _gameBoard[x, 1, 1] &&
                     _gameBoard[x, 1, 1] == _gameBoard[x, 2, 0])
@@ -256,8 +243,6 @@ namespace TicTacToe.Logic
                 }
             }
 
-            // 7. Чотири діагоналі через весь куб
-            // Діагональ від (0,0,0) до (2,2,2)
             if (_gameBoard[0, 0, 0] != '\0' &&
                 _gameBoard[0, 0, 0] == _gameBoard[1, 1, 1] &&
                 _gameBoard[1, 1, 1] == _gameBoard[2, 2, 2])
@@ -272,7 +257,6 @@ namespace TicTacToe.Logic
                 return;
             }
 
-            // Діагональ від (0,0,2) до (2,2,0)
             if (_gameBoard[0, 0, 2] != '\0' &&
                 _gameBoard[0, 0, 2] == _gameBoard[1, 1, 1] &&
                 _gameBoard[1, 1, 1] == _gameBoard[2, 2, 0])
@@ -287,7 +271,6 @@ namespace TicTacToe.Logic
                 return;
             }
 
-            // Діагональ від (0,2,0) до (2,0,2)
             if (_gameBoard[0, 2, 0] != '\0' &&
                 _gameBoard[0, 2, 0] == _gameBoard[1, 1, 1] &&
                 _gameBoard[1, 1, 1] == _gameBoard[2, 0, 2])
@@ -302,7 +285,6 @@ namespace TicTacToe.Logic
                 return;
             }
 
-            // Діагональ від (0,2,2) до (2,0,0)
             if (_gameBoard[0, 2, 2] != '\0' &&
                 _gameBoard[0, 2, 2] == _gameBoard[1, 1, 1] &&
                 _gameBoard[1, 1, 1] == _gameBoard[2, 0, 0])
@@ -317,12 +299,10 @@ namespace TicTacToe.Logic
                 return;
             }
 
-            // Якщо не знайдено жодної переможної лінії
             _winner = null;
             _winningLine = null;
         }
 
-        // Метод для отримання переможної лінії
         public List<PositionPoint>? GetWinningLine()
         {
             if (!_winnerChecked)
@@ -332,7 +312,6 @@ namespace TicTacToe.Logic
             return _winningLine;
         }
 
-        // Допоміжний метод для пошуку гравця за символом
         private Player? GetPlayerBySymbol(char symbol)
         {
             foreach (var player in _players)
@@ -346,7 +325,6 @@ namespace TicTacToe.Logic
             return null;
         }
 
-        // Перевірка, чи дошка заповнена
         private bool IsBoardFull()
         {
             for (int x = 0; x < BoardSize; x++)
